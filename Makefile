@@ -52,7 +52,9 @@
 
 NAME = philo
 
-SRC =  philosophers.c
+SRC =  philosophers.c philo_num.c init.c routine.c errors.c
+
+SRC_LIB	=
 
 OBJ		=	$(SRC:.c=.o)
 LIBDIR	=	libft

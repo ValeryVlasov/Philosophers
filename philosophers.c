@@ -1,106 +1,58 @@
 #include "philosophers.h"
-#include <math.h>
 
-void get_time(struct timeval tv, struct timezone tz)
+unsigned long get_time(struct timeval tv)
 {
-	int i_tv = tv.tv_usec;
-	int i_tz = tz.tz_dsttime;
-	gettimeofday(&tv, &tz);
-	printf("Прошло времени с момента запуска программы - %d\n", tv.tv_usec - i_tv);
+	int i_tv = tv.tv_usec / 1000 + tv.tv_sec * 1000;
+	gettimeofday(&tv, NULL);
+	int i_tv2 = tv.tv_usec / 1000 + tv.tv_sec * 1000;
+	printf("Прошло времени с момента запуска программы - %d\n", i_tv2 - i_tv);
+	return (i_tv2 - i_tv);
 }
 
-
-void *func()
+int everyone_ate(t_table *table)
 {
-	char *a;
-	for (int i = 0; i < 1 << 20; i++)
-	{
-		a = malloc(1);
-		ft_bzero(a, 1);
-//		ft_memset(a, *(int *)(arg), 1);
-		free(a);
-//		(*(int *)arg)++;
-	}
-	return (NULL);
-}
-
-void begin_work(t_philo *phi)
-{
-	gettimeofday(&phi->time, &phi->tz);
-}
-
-void print_status(t_philo *philo)
-{
-	pthread_mutex_lock(philo->mutex);
-	printf("%lu\t%d %s\n", get_time(philo->time.tv, philo->tz), i + 1, philo->thread.mode);
-	pthread_mutex_unlock(philo->mutex);
-}
-
-int print_err(char *msg)
-{
-	printf("%s", msg);
-	return (1);
-}
-
-void err_handle(char *msg)
-{
-	ft_putstr_fd(msg, 2);
-	exit(1);
-}
-
-void init_mute_thread(t_philo *philo)
-{
-	int ret;
 	int i;
 
 	i = -1;
-	printf("num = %d\n", philo->philo_num);
-	while (++i < philo->philo_num)
+	while (++i < table->philo_num)
 	{
-		ret = pthread_create(&philo->thread[i], NULL, func, NULL);
-		if (ret)
-		{
-			err_handle("Creating thread failed\n");
-		}
-		else
-		{
-			ret = pthread_detach(philo->thread[i]);
-			if (ret)
-			{
-				err_handle("Detaching thread failed\n");
-			}
-		}
+		if (table->philos[i].ate_enough == 0)
+			return (0);
 	}
-	ret = pthread_mutex_init(&philo->mutex, NULL);
-	if (ret)
-	{
-		err_handle("Initialization mutex failed\n");
-	}
+	return (1);
 }
 
-void init_phil(t_philo *philo, char **argv)
+void print_state(t_philo *philo, char *state)
 {
-	philo->philo_num = ft_atoi(argv[1]);
-	philo->time_to_die = ft_atoi(argv[2]);
-	philo->time_to_eat = ft_atoi(argv[3]);
-	philo->time_to_sleep = ft_atoi(argv[4]);
-	if (argv[5])
-		philo->count_must_eat = ft_atoi(argv[5]);
-	philo->thread = (pthread_t *)malloc(sizeof(pthread_t) * philo->philo_num);
-	if (!philo->thread)
-		err_handle("Malloc failed\n");
-	ft_putstr_fd("sdaf\n", 2);
-	init_mute_thread(philo);
+	char *str;
+
+	if (!philo || !state)
+		return ;
+	str = ft_itoa(philo->num);
+	pthread_mutex_lock(philo->table->print_m);
+	ft_putstrs_fd(NULL, " ", str, 1);//TODO: calc time
+	ft_putstrs_fd(" ", state, "\n", 1);
+	pthread_mutex_unlock(philo->table->print_m);
+	delete_mem(str);
 }
 
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 {
-	t_philo philo;
+	t_table table;
 
 	if (argc < 5 || argc > 6)
 		return (print_err("Bad argument\n"));
-	begin_work(&philo);
-	init_phil(&philo, argv);
-
+	if (validation(argv, &table) == 0)
+		return (1);
+	init_phil(&table);
+	while (table.is_sm1_dead != 1)
+	{
+		if (everyone_ate(table))
+		{
+			ft_putstr_fd(MEAL, 1);
+			ft_putstr_fd("\n", 1);
+			break ;
+		}
+	}
 	return (0);
 }
