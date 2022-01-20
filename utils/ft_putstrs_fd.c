@@ -1,26 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
+/*   ft_putstrs_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tgrounds <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/10 13:09:30 by tgrounds          #+#    #+#             */
-/*   Updated: 2021/11/10 13:09:31 by tgrounds         ###   ########.fr       */
+/*   Created: 2022/01/20 13:53:40 by tgrounds          #+#    #+#             */
+/*   Updated: 2022/01/20 13:53:46 by tgrounds         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../philosophers.h"
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
+int	ft_putstrs_fd(char *before, char *str, char *after, int fd)
 {
-	t_list	*list;
-
-	if (!(*lst))
-		*lst = new;
-	else
-	{
-		list = ft_lstlast(*lst);
-		list->next = new;
-	}
+	if (before)
+		write(fd, before, ft_strlen(before));
+	if (str)
+		write(fd, str, ft_strlen(str));
+	if (after)
+		write(fd, after, ft_strlen(after));
+	return (1);
 }

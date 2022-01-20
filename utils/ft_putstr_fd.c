@@ -1,27 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_front.c                                  :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tgrounds <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/10 13:09:33 by tgrounds          #+#    #+#             */
-/*   Updated: 2021/11/10 13:09:35 by tgrounds         ###   ########.fr       */
+/*   Created: 2021/11/10 13:11:19 by tgrounds          #+#    #+#             */
+/*   Updated: 2021/11/10 13:11:20 by tgrounds         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../philosophers.h"
 
-void	ft_lstadd_front(t_list **lst, t_list *new)
+void	ft_putstr_fd(char *s, int fd)
 {
-	t_list	*list;
-
-	if (!*lst)
-		*lst = new;
-	else
-	{
-		list = new;
-		list->next = *lst;
-		*lst = list;
-	}
+	if (fd < 0)
+		return ;
+	if (s)
+		while (*s)
+			write(fd, s++, 1);
 }

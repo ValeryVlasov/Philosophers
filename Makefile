@@ -52,36 +52,34 @@
 
 NAME = philo
 
-SRC =  philosophers.c philo_num.c init.c routine.c errors.c
+SRC = 	philosophers.c philo_num.c init.c routine.c errors.c calc_time.c utils/delete_mem.c\
+		utils/ft_putstrs_fd.c utils/ft_atoi.c utils/ft_itoa.c utils/ft_putstr_fd.c utils/ft_strlen.c
 
 SRC_LIB	=
 
 OBJ		=	$(SRC:.c=.o)
-LIBDIR	=	libft
-LIB		=	$(LIBDIR)/libft.a
+
 CC		=	gcc
+
 CFLAGS	=	 -g #-Wall -Wextra -Werror
+
 HEADER	=	philosophers.h
 
-.PHONY	:	all clean fclean re libft minilibs sbor_minishell
+.PHONY	:	all clean fclean re
 
 all		:	$(NAME)
 
-$(LIB)	:
-			make -s -C $(LIBDIR)
 
 $(NAME)	:	$(OBJ) Makefile
-			$(CC) $(CFLAGS) -L $(LIBDIR) -lft $(OBJ) -o $(NAME)
+			$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
 %.o		:	%.c $(LIB)
 			$(CC) $(CFLAGS) -c $< -o ${<:.c=.o}
 
 clean	:
 			rm -f $(OBJ)
-			make clean -s -C $(LIBDIR)
 
 fclean	:	clean
-			make fclean -s -C $(LIBDIR)
 			rm -f $(NAME)
 
-re		:	fclean all
+re		:	clean fclean all

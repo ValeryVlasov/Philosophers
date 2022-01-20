@@ -1,28 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstsize.c                                       :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tgrounds <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/10 13:10:13 by tgrounds          #+#    #+#             */
-/*   Updated: 2021/11/10 13:10:14 by tgrounds         ###   ########.fr       */
+/*   Created: 2021/04/16 13:17:20 by tgrounds          #+#    #+#             */
+/*   Updated: 2021/04/16 19:57:26 by tgrounds         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../philosophers.h"
 
-int	ft_lstsize(t_list *lst)
+int	ft_strlen(const char *str)
 {
-	int		num;
-	t_list	*list;
+	int		length;
 
-	num = 0;
-	list = lst;
-	while (list)
-	{
-		num++;
-		list = list->next;
-	}
-	return (num);
+	length = 0;
+	while (str[length])
+		length++;
+	return (length);
 }
