@@ -66,6 +66,20 @@ void	check_philos(t_table *table)
 	}
 }
 
+void	clear_mem(t_table *table)
+{
+	if (table)
+	{
+		while (table->philo_num-- > 0)
+			pthread_mutex_destroy(&table->forks_m[table->philo_num]);
+		pthread_mutex_destroy(&table->print_m);
+		pthread_mutex_destroy(&table->one_philo_m);
+		delete_mem(table->forks_m);
+		delete_mem(table->threads);
+		delete_mem(table->philos);
+	}
+}
+
 int	main(int argc, char **argv)
 {
 	t_table	table;
@@ -87,5 +101,6 @@ int	main(int argc, char **argv)
 		check_philos(&table);
 	}
 	my_sleep(table.time_start, 10000);
+	clear_mem(&table);
 	return (0);
 }

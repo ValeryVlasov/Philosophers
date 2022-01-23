@@ -31,22 +31,22 @@ struct	s_table;
 
 typedef struct s_philo
 {
-	int				ate_enough;
 	int				num;
+	int				left_fork;
+	int				right_fork;
+	int				ate_enough;
 	long long		last_eat;
 	struct s_table	*table;
-	int				right_fork;
-	int				left_fork;
 }				t_philo;
 
 typedef struct s_table
 {
 	int				philo_num;
+	int				is_sm1_dead;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				count_must_eat;
-	int				is_sm1_dead;
 	long long		time_start;
 	t_philo			*philos;
 	pthread_t		*threads;
