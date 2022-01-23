@@ -35,6 +35,6 @@ void	my_sleep(long long time_start, long long mcs)
 	while (cur - start < mcs)
 	{
 		cur = get_time(time_start);
-		usleep(900);
+		usleep(50);
 	}
 }
