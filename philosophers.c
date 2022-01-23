@@ -28,35 +28,38 @@ int	everyone_ate(t_table table)
 void	print_state(t_philo *philo, char *state)
 {
 	char	*str;
+	char	*time;
 
-	if (!philo || !state)
+	if (!philo || !state || philo->table->is_sm1_dead == 1)
 		return ;
 	str = ft_itoa(philo->num);
+	time = ft_itoa((int)((get_time(philo->table->time_start)) / 1000));
 	pthread_mutex_lock(&philo->table->print_m);
-	ft_putstrs_fd(ft_itoa((int)((get_time(philo->table->time_start)) / 1000)), " ", str, 1);
+	ft_putstrs_fd(time, " ", str, 1);
 	ft_putstrs_fd(" ", state, "\n", 1);
 	pthread_mutex_unlock(&philo->table->print_m);
 	delete_mem(str);
+	delete_mem(time);
 }
 
 void	check_philos(t_table *table)
 {
 	long long	save;
+	long long	time;
 	int			i;
 
 	i = -1;
-	long long temp;
 	while (++i < table->philo_num)
 	{
 		save = table->philos[i].last_eat;
-		if ((temp = get_time(table->time_start)) - save >= table->time_to_die * 1000)
+		time = get_time(table->time_start);
+		if (time - save >= table->time_to_die * 1000)
 		{
 			if (!table->philos[i].ate_enough)
 			{
-				pthread_mutex_lock(&table->print_m);
-				printf("%lld %d %s\nlast eat = %lld, to_die = %d, temp = %lld\n", get_time(table->time_start) / 1000, i + 1, DIED, save, table->time_to_die * 1000, temp);
-//			print_state(&table->philos[i], DIED);
 				table->is_sm1_dead = 1;
+				pthread_mutex_lock(&table->print_m);
+				printf("%lld %d %s\n", time / 1000, i + 1, DIED);
 				return ;
 			}
 		}
@@ -70,7 +73,7 @@ int	main(int argc, char **argv)
 	if (argc < 5 || argc > 6)
 		return (print_err("Bad argument\n"));
 	if (validation(argv, &table) == 0)
-		return (1);
+		return (print_err("Parameters must be only positive integers\n"));
 	init_phil(&table);
 	while (table.is_sm1_dead != 1)
 	{
@@ -81,8 +84,8 @@ int	main(int argc, char **argv)
 			ft_putstr_fd("\n", 1);
 			break ;
 		}
-		usleep(1000);
 		check_philos(&table);
 	}
+	my_sleep(table.time_start, 10000);
 	return (0);
 }

@@ -35,8 +35,8 @@ typedef struct s_philo
 	int				num;
 	long long		last_eat;
 	struct s_table	*table;
-	pthread_mutex_t	right_fork;
-	pthread_mutex_t	left_fork;
+	int				right_fork;
+	int				left_fork;
 }				t_philo;
 
 typedef struct s_table
@@ -54,7 +54,7 @@ typedef struct s_table
 	pthread_mutex_t	one_philo_m;
 	pthread_mutex_t	*forks_m;
 }				t_table;
-//table->time.tv_sec * 1000 + table->time.tv_usec / 1000
+
 void		print_state(t_philo *philo, char *state);
 
 //philo_num.c
@@ -81,8 +81,8 @@ char		*ft_itoa(int n);
 void		ft_putstr_fd(char *s, int fd);
 
 //calc_time.c
-long long	get_time(long long last_time);//returns time in microsec
-long long	convert_time(struct timeval time);//returns time in microsec
-void		my_sleep(t_philo *philo, long long mcs);
+long long	get_time(long long last_time);
+long long	convert_time(struct timeval time);
+void		my_sleep(long long time_start, long long mcs);
 
 #endif

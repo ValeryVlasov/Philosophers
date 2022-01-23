@@ -54,10 +54,10 @@ static void	init_philos(t_table *table)
 		table->philos[i].ate_enough = 0;
 		table->philos[i].table = table;
 		table->philos[i].last_eat = 0;
-		table->philos[i].left_fork = table->forks_m[i];
-		table->philos[i].right_fork = table->forks_m[right_idx];
+		table->philos[i].left_fork = i;
+		table->philos[i].right_fork = right_idx;
 		if (table->philo_num == 1)
-			table->philos[i].right_fork = table->one_philo_m;
+			table->philos[i].right_fork = -1;
 	}
 }
 

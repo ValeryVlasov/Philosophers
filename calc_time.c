@@ -25,16 +25,16 @@ long long	get_time(long long last_time)
 	return (convert_time(new_time) - last_time);
 }
 
-void	my_sleep(t_philo *philo, long long mcs)
+void	my_sleep(long long time_start, long long mcs)
 {
 	long long	cur;
 	long long	start;
 
-	start = get_time(philo->table->time_start);
+	start = get_time(time_start);
 	cur = start;
 	while (cur - start < mcs)
 	{
-		usleep(100);//TODO
-		cur = get_time(philo->table->time_start);
+		cur = get_time(time_start);
+		usleep(900);
 	}
 }
