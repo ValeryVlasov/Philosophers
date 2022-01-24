@@ -16,10 +16,10 @@ HEADER	=	philosophers.h
 all		:	$(NAME)
 
 
-$(NAME)	:	$(OBJ) Makefile philosophers.h
+$(NAME)	:	$(OBJ) Makefile
 			$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
-%.o		:	%.c
+%.o		:	%.c philosophers.h
 			$(CC) $(CFLAGS) -c $< -o ${<:.c=.o}
 
 clean	:
