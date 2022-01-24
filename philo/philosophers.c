@@ -88,7 +88,8 @@ int	main(int argc, char **argv)
 		return (print_err("Bad argument\n"));
 	if (validation(argv, &table) == 0)
 		return (print_err("Parameters must be only positive integers\n"));
-	init_phil(&table);
+	if (init_phil(&table) == 1)
+		return (1);
 	while (table.is_sm1_dead != 1)
 	{
 		if (everyone_ate(table))

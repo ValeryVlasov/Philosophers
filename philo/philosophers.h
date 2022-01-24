@@ -19,8 +19,6 @@
 # include <sys/time.h>
 # include <stdlib.h>
 # define FORK "has taken a fork"
-# define LEFT_FORK "has taken a left fork"
-# define RIGHT_FORK "has taken a right fork"
 # define EAT "is eating"
 # define SLEEP "is sleeping"
 # define THINK "is thinking"
@@ -62,11 +60,11 @@ int			right(int n, int amount);
 int			left(int n, int amount);
 
 //errors
-void		err_handle(char *msg);
+void		err_handle(t_table *table, char *msg);
 int			print_err(char *msg);
 
 //init.c
-void		init_phil(t_table *table);
+int			init_phil(t_table *table);
 int			validation(char **args, t_table *table);
 
 //routine.c

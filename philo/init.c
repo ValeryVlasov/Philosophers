@@ -18,20 +18,16 @@ static void	init_mute_thread(t_table *tabl)
 
 	i = -1;
 	if (pthread_mutex_init(&tabl->print_m, NULL) != 0)
-		err_handle("Creating mutex failed\n");
+		err_handle(tabl, "Creating mutex failed\n");
 	tabl->time_start = get_time(0);
 	while (++i < tabl->philo_num)
 	{
 		if (pthread_create(&tabl->threads[i], NULL, routine, &tabl->philos[i]))
-		{
-			err_handle("Creating thread failed\n");
-		}
+			err_handle(tabl, "Creating thread failed\n");
 		else
 		{
 			if (pthread_detach(tabl->threads[i]))
-			{
-				err_handle("Detaching thread failed\n");
-			}
+				err_handle(tabl, "Detaching thread failed\n");
 		}
 	}
 }
@@ -43,8 +39,12 @@ static void	init_philos(t_table *table)
 
 	i = -1;
 	while (++i < table->philo_num)
-		pthread_mutex_init(&table->forks_m[i], NULL);
-	pthread_mutex_init(&table->one_philo_m, NULL);
+	{
+		if (pthread_mutex_init(&table->forks_m[i], NULL) != 0)
+			err_handle(table, "Mutex init failed\n");
+	}
+	if (pthread_mutex_init(&table->one_philo_m, NULL) != 0)
+		err_handle(table, "Mutex init failed\n");
 	pthread_mutex_lock(&table->one_philo_m);
 	i = -1;
 	while (++i < table->philo_num)
@@ -61,21 +61,22 @@ static void	init_philos(t_table *table)
 	}
 }
 
-void	init_phil(t_table *table)
+int	init_phil(t_table *table)
 {
 	table->is_sm1_dead = 0;
 	table->threads = (pthread_t *)malloc(sizeof(pthread_t) * table->philo_num);
 	if (!table->threads)
-		err_handle("Malloc failed\n");
+		err_handle(table, "Malloc failed\n");
 	table->philos = (t_philo *)malloc(sizeof(t_philo) * table->philo_num);
 	if (!table->philos)
-		err_handle("Malloc failed\n");
+		err_handle(table, "Malloc failed\n");
 	table->forks_m
 		= (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * table->philo_num);
 	if (!table->forks_m)
-		err_handle("Malloc failed\n");
+		err_handle(table, "Malloc failed\n");
 	init_philos(table);
 	init_mute_thread(table);
+	return (0);
 }
 
 int	validation(char **args, t_table *table)
